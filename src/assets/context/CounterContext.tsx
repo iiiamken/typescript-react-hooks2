@@ -69,7 +69,8 @@ const initContextState: useCounterContextType = {
   handleTextInput: (e: ChangeEvent<HTMLInputElement>) => {},
 }
 
-export const useCounterContext = createContext<useCounterContextType>
+export const CounterContext =
+  createContext<useCounterContextType>(initContextState)
 
 type ChildrenType = {
   children?: ReactElement | undefined
