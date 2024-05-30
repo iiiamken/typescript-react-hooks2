@@ -1,4 +1,11 @@
-import { ChangeEvent, createContext, useReducer } from "react"
+import {
+  ChangeEvent,
+  ReactElement,
+  ReactNode,
+  ReactText,
+  createContext,
+  useReducer,
+} from "react"
 
 type StateType = {
   count: number
@@ -30,6 +37,7 @@ const reducer = (state: StateType, action: ReducerAction): typeof initState => {
   }
 }
 
+//custom hook
 const useCounterContext = (initState: StateType) => {
   const [state, dispatch] = useReducer(reducer, initState)
 
@@ -41,4 +49,29 @@ const useCounterContext = (initState: StateType) => {
       payload: e.target.value,
     })
   }
+  return { state, increment, decrement, handleTextInput }
+}
+
+// create context
+type useCounterContextType = ReturnType<typeof useCounterContext>
+
+//initial state
+const initContextState: useCounterContextType = {
+  state: initState,
+  increment: () => {},
+  decrement: () => {},
+  handleTextInput: (e: ChangeEvent<HTMLInputElement>) => {},
+}
+
+export const CounterContext = createContext<useCounterContextType>
+
+export const CounterProvider = ({
+  children,
+  ...initState
+}: StateType): ReactElement => {
+  return (
+    <CounterContext.Provider value={useCounterContext(initState)}>
+      {children}
+    </CounterContext.Provider>
+  )
 }
