@@ -1,9 +1,8 @@
 import {
   ChangeEvent,
   ReactElement,
-  ReactNode,
-  ReactText,
   createContext,
+  useCallback,
   useReducer,
 } from "react"
 
@@ -41,14 +40,20 @@ const reducer = (state: StateType, action: ReducerAction): typeof initState => {
 const useCounterContext = (initState: StateType) => {
   const [state, dispatch] = useReducer(reducer, initState)
 
-  const increment = () => dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT })
-  const decrement = () => dispatch({ type: REDUCER_ACTION_TYPE.DECREMENT })
-  const handleTextInput = (e: ChangeEvent<HTMLInputElement>) => {
+  const increment = useCallback(
+    () => dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT }),
+    []
+  )
+  const decrement = useCallback(
+    () => dispatch({ type: REDUCER_ACTION_TYPE.DECREMENT }),
+    []
+  )
+  const handleTextInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: REDUCER_ACTION_TYPE.NEW_INPUT,
       payload: e.target.value,
     })
-  }
+  }, [])
   return { state, increment, decrement, handleTextInput }
 }
 
@@ -65,10 +70,14 @@ const initContextState: useCounterContextType = {
 
 export const CounterContext = createContext<useCounterContextType>
 
+type ChildrenType = {
+  children?: ReactElement | undefined
+}
+
 export const CounterProvider = ({
   children,
   ...initState
-}: StateType): ReactElement => {
+}: ChildrenType & StateType): ReactElement => {
   return (
     <CounterContext.Provider value={useCounterContext(initState)}>
       {children}
