@@ -1,4 +1,4 @@
-import Counter from "./Counter"
+import Counter from "./assets/Counter"
 import { CounterProvider } from "./assets/context/CounterContext"
 import { initState } from "./assets/context/CounterContext"
 
