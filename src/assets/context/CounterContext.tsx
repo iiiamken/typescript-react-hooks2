@@ -1,4 +1,4 @@
-import { createContext } from "react"
+import { ChangeEvent, createContext, useReducer } from "react"
 
 type StateType = {
   count: number
@@ -27,5 +27,18 @@ const reducer = (state: StateType, action: ReducerAction): typeof initState => {
       return { ...state, text: action.payload ?? "" }
     default:
       throw new Error()
+  }
+}
+
+const useCounterContext = (initState: StateType) => {
+  const [state, dispatch] = useReducer(reducer, initState)
+
+  const increment = () => dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT })
+  const decrement = () => dispatch({ type: REDUCER_ACTION_TYPE.DECREMENT })
+  const handleTextInput = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: REDUCER_ACTION_TYPE.NEW_INPUT,
+      payload: e.target.value,
+    })
   }
 }
