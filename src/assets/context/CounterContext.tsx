@@ -3,6 +3,7 @@ import {
   ReactElement,
   createContext,
   useCallback,
+  useContext,
   useReducer,
 } from "react"
 
@@ -10,7 +11,7 @@ type StateType = {
   count: number
   text: string
 }
-const initState = { count: 0, text: "" }
+export const initState = { count: 0, text: "" }
 
 const enum REDUCER_ACTION_TYPE {
   INCREMENT,
@@ -68,7 +69,7 @@ const initContextState: useCounterContextType = {
   handleTextInput: (e: ChangeEvent<HTMLInputElement>) => {},
 }
 
-export const CounterContext = createContext<useCounterContextType>
+export const useCounterContext = createContext<useCounterContextType>
 
 type ChildrenType = {
   children?: ReactElement | undefined
@@ -83,4 +84,36 @@ export const CounterProvider = ({
       {children}
     </CounterContext.Provider>
   )
+}
+
+//new custom hook
+
+type UseCounterHookType = {
+  count: number
+  increment: () => void
+  decrement: () => void
+}
+
+export const useCounter = (): UseCounterHookType => {
+  const {
+    state: { count },
+    increment,
+    decrement,
+  } = useContext(CounterContext)
+
+  return { count, increment, decrement }
+}
+
+//new custom hook2
+type UseCounterTextHookType = {
+  text: string
+  handleTextInput: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+export const useCounterText = (): UseCounterTextHookType => {
+  const {
+    state: { text },
+    handleTextInput,
+  } = useContext(CounterContext)
+  return { text, handleTextInput }
 }
